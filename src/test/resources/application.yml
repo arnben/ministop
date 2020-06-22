@@ -1,0 +1,4 @@
+ministop:
+  admin:
+    secret: thanos
+    rootPath: /su
