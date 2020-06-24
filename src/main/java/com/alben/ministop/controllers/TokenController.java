@@ -1,6 +1,8 @@
 package com.alben.ministop.controllers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -9,29 +11,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.fasterxml.jackson.databind.PropertyNamingStrategy.*;
+
 @RestController
 public class TokenController {
     @PostMapping("/v1/oauth2/token")
     public ResponseEntity<TokenApiResponse> getToken(@RequestBody TokenApiRequest tokenApiRequest) {
-        return ResponseEntity.ok(TokenApiResponse.builder().accessToken("abkfhkshfksjhjkkhk3hk3243423").build());
+        return ResponseEntity.ok(TokenApiResponse.builder()
+                .accessToken("abkfhkshfksjhjkkhk3hk3243423")
+                .expiresAt(System.currentTimeMillis())
+                .build());
     }
 
     @Builder
     @Getter
+    @JsonNaming(SnakeCaseStrategy.class)
     public static class TokenApiResponse {
-        @JsonProperty("access_token")
         private String accessToken;
+        private long expiresAt;
     }
 
     @Data
+    @JsonNaming(SnakeCaseStrategy.class)
     public static class TokenApiRequest {
-        @JsonProperty("client_id")
         private String clientId;
-
-        @JsonProperty("client_secret")
         private String clientSecret;
-
-        @JsonProperty("grant_type")
         private String grantType;
     }
 }
