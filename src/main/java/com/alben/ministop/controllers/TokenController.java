@@ -1,7 +1,5 @@
 package com.alben.ministop.controllers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.fasterxml.jackson.databind.PropertyNamingStrategy.*;
+import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 
 @RestController
 public class TokenController {
