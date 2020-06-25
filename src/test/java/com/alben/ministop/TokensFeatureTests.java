@@ -27,8 +27,12 @@ public class TokensFeatureTests {
 	@DisplayName("Get token when credentials are valid")
 	void getToken() throws Exception {
 		mockMvc.perform(
-				post("/v1/oauth2/token").header("Content-Type", "application/json")
-				.content("{ \"client_id\":\"24353344\", \"client_secret\": \"432rers432rwrr\", \"grant_type\":\"client_credentials\"}"))
+				post("/v1/oauth2/token")
+						.header("Content-Type", "application/json")
+
+				.content("{ \"client_id\":\"24353344\", " +
+						"\"client_secret\": \"432rers432rwrr\", " +
+						"\"grant_type\":\"client_credentials\"}"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.access_token").isNotEmpty())
 				.andExpect(jsonPath("$.expires_at").isNotEmpty());

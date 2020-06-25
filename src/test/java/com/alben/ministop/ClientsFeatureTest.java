@@ -41,9 +41,7 @@ public class ClientsFeatureTest {
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
                         .content("{ \"name\":\"User Service\"}"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error.id").value(1))
-                .andExpect(jsonPath("$.error.message").value("Missing or invalid credentials."));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -66,8 +64,6 @@ public class ClientsFeatureTest {
                 post("/su/v1/client/someClientId123/secret")
                         .header("Content-Type", "application/json")
                         .content("{ \"name\":\"User Service\"}"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error.id").value(1))
-                .andExpect(jsonPath("$.error.message").value("Missing or invalid credentials."));
+                .andExpect(status().isUnauthorized());
     }
 }

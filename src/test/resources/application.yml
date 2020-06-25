@@ -2,3 +2,4 @@ ministop:
   admin:
     secret: thanos
     rootPath: /su
+  api.rootPath: /api
