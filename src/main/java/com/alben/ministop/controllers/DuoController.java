@@ -33,6 +33,26 @@ public class DuoController {
         return ResponseEntity.ok(AllDuosResponse.builder().duos(response).build());
     }
 
+    @GetMapping("/{clientId}/{duoKeyName}")
+    public ResponseEntity<Map<String, Object>> getDuoByKey(@PathVariable String clientId,
+                                                      @PathVariable String duoKeyName,
+                                                      @RequestHeader("Authorization") Optional<String> token) {
+        if(token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Map<String, Object> response = new TreeMap<>();
+        if("stringKey".equals(duoKeyName))
+            response.put(duoKeyName, "foo1");
+
+        if("numberKey".equals(duoKeyName))
+            response.put(duoKeyName, 123453432432L);
+
+        if("collectionKey".equals(duoKeyName))
+            response.put("collectionKey",
+                    Arrays.asList("tito", "vic", "joey"));
+        return ResponseEntity.ok(response);
+    }
+
     @Builder
     @Getter
     @JsonNaming(SnakeCaseStrategy.class)
