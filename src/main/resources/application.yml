@@ -1,0 +1,7 @@
+ministop:
+  admin:
+    secret: FE42A577A32E2F85AAEEC811B0D22DA0E6C6873D
+    rootPath: /su
+  api.rootPath: /api
+
+info.app.version: ${project.version}
