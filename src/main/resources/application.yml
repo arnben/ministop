@@ -1,7 +1,11 @@
 ministop:
   admin:
-    secret: FE42A577A32E2F85AAEEC811B0D22DA0E6C6873D
-    rootPath: /su
+    secret: 58yY2NVf6eEWTY9P
+    rootPath: /ms-admin
   api.rootPath: /api
 
+#ACTUATOR
 info.app.version: ${project.version}
+
+#JSONWEBTOKEN
+jwt.secret: R6zWSxJMdKeVtw3p
