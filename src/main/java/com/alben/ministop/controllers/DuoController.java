@@ -21,9 +21,6 @@ public class DuoController {
     @GetMapping("/{clientId}")
     public ResponseEntity<AllDuosResponse> getAllDuos(@PathVariable String clientId,
                                                       @RequestHeader("Authorization") Optional<String> token) {
-        if(token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         Map<String, Object> response = new TreeMap<>();
         response.put("stringKey", "foo1");
         response.put("numberKey", 123453432432L);

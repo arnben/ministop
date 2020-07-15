@@ -40,6 +40,7 @@ public class AdminEndpointsSecurity implements WebMvcConfigurer {
             if(adminKey.equals(inputKey)) {
                 return true;
             } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
             }
 

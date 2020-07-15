@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +21,6 @@ public class ClientController {
     public ResponseEntity<RegisterClientResponse> registerClient(
             @RequestHeader Optional<String> adminKey,
             @RequestBody RegisterClientRequest request) {
-        if(adminKey.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         return ResponseEntity.ok(RegisterClientResponse.builder().clientId("21421324se").clientSecret("bkhfkushakehska").build());
     }
 
@@ -32,8 +28,6 @@ public class ClientController {
     public ResponseEntity<RegisterClientResponse> renewClient(
             @RequestHeader Optional<String> adminKey,
             @RequestBody RegisterClientRequest request) {
-        if(adminKey.isEmpty())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(RegisterClientResponse.builder().clientId("21421324se").clientSecret("bkhfkushakehska").build());
     }
 
