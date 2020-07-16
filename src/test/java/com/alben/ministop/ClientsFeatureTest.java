@@ -1,14 +1,11 @@
 package com.alben.ministop;
 
-import com.alben.ministop.controllers.ClientController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ClientsFeatureTest {
+
+    private static final String CLIENT_ID_INPUT = "user-service";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -30,10 +30,23 @@ public class ClientsFeatureTest {
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
                         .header("adminKey", "Thanos")
-                        .content("{ \"name\":\"User Service\"}"))
+                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.client_id").isNotEmpty())
+                .andExpect(jsonPath("$.client_id").value(CLIENT_ID_INPUT))
                 .andExpect(jsonPath("$.client_secret").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("Registration throws Validation Exception if name contains space.")
+    public void registerClientWithValidationException() throws Exception {
+        mockMvc.perform(
+                post("/su/v1/client")
+                        .header("Content-Type", "application/json")
+                        .header("adminKey", "Thanos")
+                        .content("{ \"name\":\"User Profile\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value(CLIENT_ID_INPUT))
+                .andExpect(jsonPath("$.error.message").value(CLIENT_ID_INPUT));
     }
 
     @Test
@@ -42,7 +55,7 @@ public class ClientsFeatureTest {
         mockMvc.perform(
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
-                        .content("{ \"name\":\"User Service\"}"))
+                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\"}"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -53,9 +66,9 @@ public class ClientsFeatureTest {
                 post("/su/v1/client/someClientId123/secret")
                         .header("Content-Type", "application/json")
                         .header("adminKey", "Thanos")
-                        .content("{ \"name\":\"User Service\"}"))
+                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.client_id").isNotEmpty())
+                .andExpect(jsonPath("$.client_id").value(CLIENT_ID_INPUT))
                 .andExpect(jsonPath("$.client_secret").isNotEmpty());
     }
 
