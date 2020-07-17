@@ -64,6 +64,6 @@ class DefaultClientServiceTest {
         ValidationException e = assertThrows(ValidationException.class,
                 () -> defaultClientService.register("user profile"));
 
-        assertErrorDetails(e, ErrorDetails.CLIENT_EXISTS, "user profile");
+        assertErrorDetails(e, ErrorDetails.CLIENT_NAME_HAS_SPACES, "user profile");
     }
 }

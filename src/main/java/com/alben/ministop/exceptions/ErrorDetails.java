@@ -9,14 +9,14 @@ import java.text.MessageFormat;
 @Getter
 public enum ErrorDetails {
 
-    CLIENT_EXISTS(1, "Client with id '{0}' already exists."),
-    CLIENT_NAME_HAS_SPACES(2, "Client name '{0}' has spaces.");
+    CLIENT_EXISTS(1, "Client with id '%s' already exists."),
+    CLIENT_NAME_HAS_SPACES(2, "Client name '%s' has spaces.");
 
     private int code;
     private String messagePattern;
 
     public String getMessage(String ... args) {
-        return MessageFormat.format(messagePattern, args);
+        return String.format(messagePattern, args);
     }
 
 }
