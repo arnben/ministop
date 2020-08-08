@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ClientRepository {
     void register(Client client);
-    Optional<Client> getClientByServiceName(String eq);
+    Optional<Client> getCLientById(String eq);
 }

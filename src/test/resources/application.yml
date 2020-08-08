@@ -1,5 +1,5 @@
 ministop:
   admin:
     secret: Thanos
-    rootPath: /su
-  api.rootPath: /api
+    rootPath: su
+  api.rootPath: api

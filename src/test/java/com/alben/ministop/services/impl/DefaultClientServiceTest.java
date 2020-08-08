@@ -32,7 +32,7 @@ class DefaultClientServiceTest {
     @Test
     @DisplayName("Should generate unique id and secret if service does not exist yet.")
     public void happyPath() throws Exception {
-        when(clientRepository.getClientByServiceName(eq("user-profile"))).thenReturn(Optional.empty());
+        when(clientRepository.getCLientById(eq("user-profile"))).thenReturn(Optional.empty());
         Client client = defaultClientService.register("user-profile");
         assertThat(client).isNotNull();
         assertThat(client.getId()).isEqualTo("user-profile");
@@ -43,7 +43,7 @@ class DefaultClientServiceTest {
     @DisplayName("Should throw error when service name exists.")
     public void sadPath1() {
         String input = "user-profile";
-        when(clientRepository.getClientByServiceName(eq(input)))
+        when(clientRepository.getCLientById(eq(input)))
                 .thenReturn(Optional.of(Client.builder().id("3fdsfsdfds3432").secret("324234234324").build()));
 
        ValidationException ex = assertThrows(ValidationException.class,

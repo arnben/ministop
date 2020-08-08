@@ -30,10 +30,10 @@ public class ClientsFeatureTest {
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
                         .header("adminKey", "Thanos")
-                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\"}"))
-                .andExpect(status().isOk())
+                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
+                .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.client_id").value(CLIENT_ID_INPUT))
-                .andExpect(jsonPath("$.client_secret").isNotEmpty());
+                .andExpect(jsonPath("$.client_key").isNotEmpty());
     }
 
     @Test
@@ -45,8 +45,21 @@ public class ClientsFeatureTest {
                         .header("adminKey", "Thanos")
                         .content("{ \"name\":\"User Profile\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error.code").value(CLIENT_ID_INPUT))
-                .andExpect(jsonPath("$.error.message").value(CLIENT_ID_INPUT));
+                .andExpect(jsonPath("$.error.code").value(1))
+                .andExpect(jsonPath("$.error.message").value("Name cannot contain spaces."));
+    }
+
+    @Test
+    @DisplayName("Registration throws Validation Exception if name already exists.")
+    public void registerClientWithValidationException2() throws Exception {
+        mockMvc.perform(
+                post("/su/v1/client")
+                        .header("Content-Type", "application/json")
+                        .header("adminKey", "Thanos")
+                        .content("{ \"name\":\"existing-name\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value(2))
+                .andExpect(jsonPath("$.error.message").value("Name 'existing-name' already exists."));
     }
 
     @Test
@@ -63,13 +76,12 @@ public class ClientsFeatureTest {
     @DisplayName("Rest passcode test")
     public void resetClientSecret() throws Exception {
         mockMvc.perform(
-                post("/su/v1/client/someClientId123/secret")
+                post("/su/v1/client/someClientId123/key")
                         .header("Content-Type", "application/json")
                         .header("adminKey", "Thanos")
-                        .content("{ \"name\":\"" + CLIENT_ID_INPUT + "\"}"))
+                        .content("{ \"email\":\"empoy.wurm@gmail.com\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.client_id").value(CLIENT_ID_INPUT))
-                .andExpect(jsonPath("$.client_secret").isNotEmpty());
+                .andExpect(jsonPath("$.client_key").isNotEmpty());
     }
 
     @Test
@@ -78,7 +90,7 @@ public class ClientsFeatureTest {
         mockMvc.perform(
                 post("/su/v1/client/someClientId123/secret")
                         .header("Content-Type", "application/json")
-                        .content("{ \"name\":\"User Service\"}"))
+                        .content("{ \"name\":\"user-service\"}"))
                 .andExpect(status().isUnauthorized());
     }
 }

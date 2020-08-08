@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
 
 @RestController
-@RequestMapping("${ministop.api.rootPath}/v1/duo")
+@RequestMapping("/${ministop.api.rootPath}/v1/duo")
 public class DuoController {
 
     @GetMapping("/{clientId}")
