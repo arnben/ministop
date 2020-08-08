@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.1.RELEASE'
+	id 'org.springframework.boot' version '2.3.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'com.palantir.git-version' version '0.12.3'
@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.alben'
 version = gitVersion()
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {
 	compileOnly {
@@ -24,10 +24,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	//Security
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	//implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.0.RELEASE'
-	//implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'org.apache.commons:commons-lang3:3.10'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
