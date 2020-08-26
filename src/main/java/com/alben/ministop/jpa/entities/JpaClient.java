@@ -28,4 +28,8 @@ public class JpaClient {
         jpaClient.setEmails(client.getEmails().stream().map(JpaEmail::of).collect(Collectors.toList()));
         return jpaClient;
     }
+
+    public Client toClient() {
+        return Client.builder().name(name).emails(emails.stream().map(e -> e.getEmail()).collect(Collectors.toSet())).build();
+    }
 }

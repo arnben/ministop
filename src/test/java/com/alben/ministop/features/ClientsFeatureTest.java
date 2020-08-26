@@ -1,5 +1,7 @@
 package com.alben.ministop.features;
 
+import com.alben.ministop.clients.repositories.*;
+import com.alben.ministop.models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +28,9 @@ public class ClientsFeatureTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
     @Test
     @DisplayName("Register client should respond successfully if name is not yet taken.")
     public void registerClient() throws Exception {
@@ -36,6 +42,9 @@ public class ClientsFeatureTest {
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value(CLIENT_NAME))
                 .andExpect(jsonPath("$.emails", hasSize(1)));
+
+        Client client = clientRepository.getClientByName("user-profile");
+        assertThat(client.getEmails()).contains("empoy.wurm@gmail.com");
     }
 
     @Test
@@ -47,7 +56,7 @@ public class ClientsFeatureTest {
                         .header("adminKey", TestConstants.RW_KEY)
                         .content("{ \"name\":\"User Profile\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.clients").value(1))
+                .andExpect(jsonPath("$.error.code").value(400_001))
                 .andExpect(jsonPath("$.error.message").value("Name cannot contain spaces."));
     }
 
@@ -69,10 +78,10 @@ public class ClientsFeatureTest {
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
                         .header("adminKey", TestConstants.RW_KEY)
-                        .content("{ \"name\":\"existing-name\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
+                        .content("{ \"name\":\"user-profile\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error.code").value(2))
-                .andExpect(jsonPath("$.error.message").value("Name 'existing-name' already exists."));
+                .andExpect(jsonPath("$.error.code").value(400_002))
+                .andExpect(jsonPath("$.error.message").value("Name 'user-profile' already exists."));
     }
 
     @Test

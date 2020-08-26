@@ -22,8 +22,16 @@ public class JpaClientRepository implements ClientRepository {
     }
 
     @Override
-    public Optional<Client> getClientById(String eq) {
+    public Optional<Client> getClientById(long id) {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Client> getClientByName(String name) {
+        Optional<JpaClient> jpaClient = repository.findJpaClientByName(name);
+        return jpaClient.isPresent()?
+                Optional.of(JpaClient.toClient(jpaClient)):Optional.empty();
+
     }
 
 }
