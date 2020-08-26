@@ -1,11 +1,12 @@
 package com.alben.ministop.models;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Builder
+import java.util.*;
+
 @Data
+@Builder
 public class Client {
-    private String id;
-    private String secret;
+    private String name;
+    private Collection<String> emails;
 }

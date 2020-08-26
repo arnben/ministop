@@ -1,4 +1,4 @@
-package com.alben.ministop;
+package com.alben.ministop.features;
 
 import com.alben.ministop.controllers.DuoController;
 import org.junit.jupiter.api.DisplayName;

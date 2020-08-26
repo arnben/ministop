@@ -1,11 +1,11 @@
-package com.alben.ministop.services.impl;
+package com.alben.ministop.clients.services.impl.impl;
 
 
 import com.alben.ministop.exceptions.ErrorDetails;
 import com.alben.ministop.exceptions.MinistopAppException;
 import com.alben.ministop.exceptions.ValidationException;
 import com.alben.ministop.models.Client;
-import com.alben.ministop.repositories.ClientRepository;
+import com.alben.ministop.clients.repositories.ClientRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,24 +30,23 @@ class DefaultClientServiceTest {
     private ClientRepository clientRepository;
 
     @Test
-    @DisplayName("Should generate unique id and secret if service does not exist yet.")
+    @DisplayName("Should return client instance when client name is valid and not yet taken.")
     public void happyPath() throws Exception {
-        when(clientRepository.getCLientById(eq("user-profile"))).thenReturn(Optional.empty());
-        Client client = defaultClientService.register("user-profile");
-        assertThat(client).isNotNull();
-        assertThat(client.getId()).isEqualTo("user-profile");
-        assertThat(client.getSecret()).isNotEmpty();;
+        when(clientRepository.getClientById(eq("user-profile"))).thenReturn(Optional.empty());
+        Client client = defaultClientService.register(Client.builder().name("user-profile").emails(Arrays.asList("empoy.wurm@gmail.com")).build());
+        assertThat(client.getName()).isEqualTo("user-profile");
+        assertThat(client.getEmails()).contains("empoy.wurm@gmail.com");
     }
 
     @Test
     @DisplayName("Should throw error when service name exists.")
     public void sadPath1() {
         String input = "user-profile";
-        when(clientRepository.getCLientById(eq(input)))
-                .thenReturn(Optional.of(Client.builder().id("3fdsfsdfds3432").secret("324234234324").build()));
+        when(clientRepository.getClientById(eq(input)))
+                .thenReturn(Optional.of(Client.builder().name(input).build()));
 
        ValidationException ex = assertThrows(ValidationException.class,
-                () -> defaultClientService.register(input));
+                () -> defaultClientService.register(Client.builder().name(input).build()));
 
        assertErrorDetails(ex, ErrorDetails.CLIENT_EXISTS, input);
     }
@@ -62,7 +61,7 @@ class DefaultClientServiceTest {
     public void sadPath2() {
 
         ValidationException e = assertThrows(ValidationException.class,
-                () -> defaultClientService.register("user profile"));
+                () -> defaultClientService.register(Client.builder().name("user profile").build()));
 
         assertErrorDetails(e, ErrorDetails.CLIENT_NAME_HAS_SPACES, "user profile");
     }

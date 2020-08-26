@@ -1,8 +1,7 @@
 ministop:
   admin:
-    secret: 58yY2NVf6eEWTY9P
-    rootPath: /ms-admin
-  api.rootPath: /api
+    rootPath: admin
+  api.rootPath: api
 
 #ACTUATOR
 info.app.version: ${project.version}

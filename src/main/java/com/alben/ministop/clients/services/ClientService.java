@@ -1,8 +1,8 @@
-package com.alben.ministop.services;
+package com.alben.ministop.clients.services;
 
 import com.alben.ministop.exceptions.ValidationException;
 import com.alben.ministop.models.Client;
 
 public interface ClientService {
-    Client register(String serviceName) throws ValidationException;
+    Client register(Client client) throws ValidationException;
 }
