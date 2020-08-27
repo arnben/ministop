@@ -32,7 +32,7 @@ class DefaultClientServiceTest {
     @Test
     @DisplayName("Should return client instance when client name is valid and not yet taken.")
     public void happyPath() throws Exception {
-        when(clientRepository.getClientById(eq("user-profile"))).thenReturn(Optional.empty());
+        when(clientRepository.getClientByName(eq("user-profile"))).thenReturn(Optional.empty());
         Client client = defaultClientService.register(Client.builder().name("user-profile").emails(Arrays.asList("empoy.wurm@gmail.com")).build());
         assertThat(client.getName()).isEqualTo("user-profile");
         assertThat(client.getEmails()).contains("empoy.wurm@gmail.com");
@@ -42,7 +42,7 @@ class DefaultClientServiceTest {
     @DisplayName("Should throw error when service name exists.")
     public void sadPath1() {
         String input = "user-profile";
-        when(clientRepository.getClientById(eq(input)))
+        when(clientRepository.getClientByName(eq(input)))
                 .thenReturn(Optional.of(Client.builder().name(input).build()));
 
        ValidationException ex = assertThrows(ValidationException.class,

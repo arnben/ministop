@@ -19,13 +19,13 @@ public class JpaClient {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private Collection<JpaEmail> emails;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<JpaEmail> emails;
 
     public static JpaClient of(Client client) {
         JpaClient jpaClient = new JpaClient();
         jpaClient.setName(client.getName());
-        jpaClient.setEmails(client.getEmails().stream().map(JpaEmail::of).collect(Collectors.toList()));
+        jpaClient.setEmails(client.getEmails().stream().map(e -> JpaEmail.of(jpaClient, e)).collect(Collectors.toList()));
         return jpaClient;
     }
 

@@ -30,7 +30,7 @@ public class JpaClientRepository implements ClientRepository {
     public Optional<Client> getClientByName(String name) {
         Optional<JpaClient> jpaClient = repository.findJpaClientByName(name);
         return jpaClient.isPresent()?
-                Optional.of(JpaClient.toClient(jpaClient)):Optional.empty();
+                Optional.of(jpaClient.get().toClient()):Optional.empty();
 
     }
 

@@ -1,6 +1,7 @@
 package com.alben.ministop.clients;
 
 import com.alben.ministop.clients.payloads.*;
+import com.alben.ministop.exceptions.*;
 import com.alben.ministop.models.Client;
 import com.alben.ministop.clients.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,4 @@ public class ClientController {
         Client client = clientService.register(request.toClient());
         return ResponseEntity.accepted().body(ClientResponse.of(client));
     }
-
 }

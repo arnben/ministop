@@ -4,3 +4,7 @@ ministop:
     madara: 9zshsuJlo7
     rootPath: su
   api.rootPath: api
+
+spring:
+  jpa:
+    show-sql: true

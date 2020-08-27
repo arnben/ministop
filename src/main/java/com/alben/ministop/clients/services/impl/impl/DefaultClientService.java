@@ -22,7 +22,7 @@ public class DefaultClientService implements ClientService {
         if(StringUtils.containsWhitespace(client.getName()))
             throw new ValidationException(ErrorDetails.CLIENT_NAME_HAS_SPACES, client.getName());
 
-        Optional<Client> existingClient = clientsRepository.getClientById(client.getName());
+        Optional<Client> existingClient = clientsRepository.getClientByName(client.getName());
         if(existingClient.isPresent())
             throw new ValidationException(ErrorDetails.CLIENT_EXISTS, client.getName());
 
