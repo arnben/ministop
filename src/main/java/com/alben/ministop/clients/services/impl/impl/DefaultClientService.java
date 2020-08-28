@@ -5,11 +5,12 @@ import com.alben.ministop.exceptions.ValidationException;
 import com.alben.ministop.models.Client;
 import com.alben.ministop.clients.repositories.ClientRepository;
 import com.alben.ministop.clients.services.ClientService;
+import org.apache.commons.lang3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DefaultClientService implements ClientService {
@@ -26,7 +27,13 @@ public class DefaultClientService implements ClientService {
         if(existingClient.isPresent())
             throw new ValidationException(ErrorDetails.CLIENT_EXISTS, client.getName());
 
+        client.setKey(RandomStringUtils.randomAlphanumeric(12));
         Client savedClient = clientsRepository.register(client);
         return savedClient;
+    }
+
+    @Override
+    public Collection<String> getAllClientNames() {
+        return clientsRepository.getAllClientNames();
     }
 }

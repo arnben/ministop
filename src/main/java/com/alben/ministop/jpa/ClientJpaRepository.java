@@ -9,4 +9,7 @@ import java.util.*;
 @Repository
 public interface ClientJpaRepository extends JpaRepository<JpaClient, Long> {
     Optional<JpaClient> findJpaClientByName(String name);
+
+    @Query("SELECT c.name FROM #{#entityName} c")
+    List<String> getAllClientNames();
 }

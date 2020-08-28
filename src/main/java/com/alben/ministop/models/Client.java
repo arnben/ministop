@@ -9,4 +9,5 @@ import java.util.*;
 public class Client {
     private String name;
     private Collection<String> emails;
+    private String key;
 }

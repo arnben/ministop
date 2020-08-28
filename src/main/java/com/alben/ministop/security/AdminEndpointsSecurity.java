@@ -40,7 +40,7 @@ public class AdminEndpointsSecurity implements WebMvcConfigurer {
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             log.info("Calling admin endpoint.");
-            String inputKey = request.getHeader("adminKey");
+            String inputKey = request.getHeader("apiKey");
             String method = request.getMethod();
 
             if (StringUtils.isBlank(inputKey)) {

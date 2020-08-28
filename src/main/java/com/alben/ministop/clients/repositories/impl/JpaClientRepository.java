@@ -34,4 +34,9 @@ public class JpaClientRepository implements ClientRepository {
 
     }
 
+    @Override
+    public Collection<String> getAllClientNames() {
+        return repository.getAllClientNames();
+    }
+
 }

@@ -1,28 +1,29 @@
 package com.alben.ministop.features;
 
+import com.alben.ministop.clients.payloads.*;
 import com.alben.ministop.clients.repositories.*;
 import com.alben.ministop.models.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import com.fasterxml.jackson.databind.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.*;
+import org.springframework.boot.test.context.*;
+import org.springframework.test.context.*;
+import org.springframework.test.context.junit.jupiter.*;
+import org.springframework.test.web.servlet.*;
 
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ClientsFeatureTest {
 
     private static final String CLIENT_NAME = "user-service";
@@ -33,20 +34,32 @@ public class ClientsFeatureTest {
     @Autowired
     private ClientRepository clientRepository;
 
+    private static ObjectMapper objectMapper;
+
+    @BeforeAll
+    public static void setUpClass() {
+        objectMapper = new ObjectMapper();
+    }
+
     @Test
     @DisplayName("Register client should respond successfully if name is not yet taken.")
     public void registerClient() throws Exception {
-        mockMvc.perform(
+       MvcResult result = mockMvc.perform(
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
-                        .header("adminKey", TestConstants.RW_KEY)
+                        .header("apiKey", TestConstants.RW_KEY)
                         .content("{ \"name\":\"" + CLIENT_NAME + "\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.name").value(CLIENT_NAME))
-                .andExpect(jsonPath("$.emails", hasSize(1)));
+                .andExpect(jsonPath("$.emails", hasSize(1)))
+                .andExpect(jsonPath("$.key").isNotEmpty())
+                .andReturn();
+
+        ClientResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), ClientResponse.class);
 
         Optional<Client> client = clientRepository.getClientByName(CLIENT_NAME);
         assertThat(client.get().getEmails()).contains("empoy.wurm@gmail.com");
+        assertThat(client.get().getKey()).isEqualTo(response.getKey());
     }
 
     @Test
@@ -55,34 +68,78 @@ public class ClientsFeatureTest {
         mockMvc.perform(
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
-                        .header("adminKey", TestConstants.RW_KEY)
+                        .header("apiKey", TestConstants.RW_KEY)
                         .content("{ \"name\":\"User Profile\"}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Client name 'User Profile' has spaces."));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("View all clients and details.")
+    @DisplayName("View all clients names.")
     public void getAllClients() throws Exception {
+        clientRepository.register(Client.builder()
+                .name("client1")
+                .emails(Arrays.asList("war.pig.coc@gmail.com"))
+                .key("randomKey")
+                .build());
+
+        clientRepository.register(Client.builder()
+                .name("client2")
+                .emails(Arrays.asList("war.pig.coc@gmail.com"))
+                .key("randomKey")
+                .build());
+
+        clientRepository.register(Client.builder()
+                .name("client3")
+                .emails(Arrays.asList("war.pig.coc@gmail.com"))
+                .key("randomKey")
+                .build());
+
         mockMvc.perform(
                 get("/su/v1/client")
                         .header("Content-Type", "application/json")
-                        .header("adminKey", TestConstants.READ_KEY))
+                        .header("apiKey", TestConstants.READ_KEY))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.clients").isNotEmpty());
+                .andExpect(jsonPath("$.clients", greaterThanOrEqualTo(3)));
+            //TODO not working    .andExpect(jsonPath("$.clients.*", containsInAnyOrder("client1", "client2", "client3")));
     }
 
     @Test
+    @DisplayName("View all specific client and details.")
+    public void getClient() throws Exception {
+        clientRepository.register(Client.builder()
+                .name("war-service")
+                .emails(Arrays.asList("war.pig.coc@gmail.com"))
+                .key("randomKey")
+                .build());
+
+        mockMvc.perform(
+                get("/su/v1/client/war-service")
+                        .header("Content-Type", "application/json")
+                        .header("apiKey", TestConstants.READ_KEY))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("war-service"))
+                .andExpect(jsonPath("$.emails", containsInAnyOrder("war.pig.coc@gmail.com")))
+                .andExpect(jsonPath("$.key").value("randomKey"));
+    }
+
+
+    @Test
     @DisplayName("Registration throws Validation Exception if name already exists.")
-    public void viewClientDetails() throws Exception {
+    public void nameExists() throws Exception {
+
+        clientRepository.register(Client.builder()
+                .name("existing-client")
+                .emails(Arrays.asList("war.pig.coc@gmail.com"))
+                .key("randomKey")
+                .build());
+
         mockMvc.perform(
                 post("/su/v1/client")
                         .header("Content-Type", "application/json")
-                        .header("adminKey", TestConstants.RW_KEY)
-                        .content("{ \"name\":\"user-profile\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
+                        .header("apiKey", TestConstants.RW_KEY)
+                        .content("{ \"name\":\"existing-client\", \"emails\":[\"empoy.wurm@gmail.com\"]}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error.code").value(400_002))
-                .andExpect(jsonPath("$.error.message").value("Name 'user-profile' already exists."));
+                .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
     @Test

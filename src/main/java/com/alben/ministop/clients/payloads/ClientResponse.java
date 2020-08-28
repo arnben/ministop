@@ -7,17 +7,18 @@ import lombok.*;
 
 import java.util.*;
 
-@Builder
-@Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Data
 public class ClientResponse {
     private String name;
     private Collection<String> emails;
+    private String key;
 
     public static ClientResponse of(Client client) {
-        return ClientResponse.builder()
-                .name(client.getName())
-                .emails(client.getEmails())
-                .build();
+        ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setEmails(client.getEmails());
+        clientResponse.setKey(client.getKey());
+        clientResponse.setName(client.getName());
+        return clientResponse;
     }
 }
