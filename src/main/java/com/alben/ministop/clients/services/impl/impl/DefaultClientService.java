@@ -1,7 +1,6 @@
 package com.alben.ministop.clients.services.impl.impl;
 
-import com.alben.ministop.exceptions.ErrorDetails;
-import com.alben.ministop.exceptions.ValidationException;
+import com.alben.ministop.exceptions.*;
 import com.alben.ministop.models.Client;
 import com.alben.ministop.clients.repositories.ClientRepository;
 import com.alben.ministop.clients.services.ClientService;
@@ -35,5 +34,14 @@ public class DefaultClientService implements ClientService {
     @Override
     public Collection<String> getAllClientNames() {
         return clientsRepository.getAllClientNames();
+    }
+
+    @Override
+    public Client getClient(String clientName) {
+        Optional<Client> client = clientsRepository.getClientByName(clientName);
+        if(client.isPresent())
+            return client.get();
+        else
+            throw new ResourceNotFoundException(ErrorDetails.CLIENT_NOT_FOUND, clientName);
     }
 }

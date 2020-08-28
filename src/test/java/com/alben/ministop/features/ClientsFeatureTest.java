@@ -78,33 +78,34 @@ public class ClientsFeatureTest {
     public void getAllClients() throws Exception {
         clientRepository.register(Client.builder()
                 .name("client1")
-                .emails(Arrays.asList("war.pig.coc@gmail.com"))
-                .key("randomKey")
+                .emails(Arrays.asList("war.pig.coc1@gmail.com"))
+                .key("randomKey1")
                 .build());
 
         clientRepository.register(Client.builder()
                 .name("client2")
-                .emails(Arrays.asList("war.pig.coc@gmail.com"))
-                .key("randomKey")
+                .emails(Arrays.asList("war.pig.coc2@gmail.com"))
+                .key("randomKey2")
                 .build());
 
         clientRepository.register(Client.builder()
                 .name("client3")
-                .emails(Arrays.asList("war.pig.coc@gmail.com"))
-                .key("randomKey")
+                .emails(Arrays.asList("war.pig.coc3@gmail.com"))
+                .key("randomKey3")
                 .build());
 
         mockMvc.perform(
                 get("/su/v1/client")
                         .header("Content-Type", "application/json")
+                        .header("Accepts", "application/json")
                         .header("apiKey", TestConstants.READ_KEY))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.clients", greaterThanOrEqualTo(3)));
-            //TODO not working    .andExpect(jsonPath("$.clients.*", containsInAnyOrder("client1", "client2", "client3")));
+                .andExpect(jsonPath("$.clients.length()", is(greaterThanOrEqualTo(3))))
+                .andExpect(jsonPath("$.clients", hasItems("client1", "client2", "client3")));
     }
 
     @Test
-    @DisplayName("View all specific client and details.")
+    @DisplayName("View specific client and details.")
     public void getClient() throws Exception {
         clientRepository.register(Client.builder()
                 .name("war-service")
@@ -156,7 +157,7 @@ public class ClientsFeatureTest {
     @DisplayName("Returns HTTP 401 when admin key is missing")
     public void resetClientSecretNoKey() throws Exception {
         mockMvc.perform(
-                post("/su/v1/client/someClientId123/secret")
+                get("/su/v1/client")
                         .header("Content-Type", "application/json")
                         .content("{ \"name\":\"user-service\"}"))
                 .andExpect(status().isUnauthorized());

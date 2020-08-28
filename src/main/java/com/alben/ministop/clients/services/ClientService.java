@@ -8,4 +8,5 @@ import java.util.*;
 public interface ClientService {
     Client register(Client client) throws ValidationException;
     Collection<String> getAllClientNames();
+    Client getClient(String clientName);
 }
