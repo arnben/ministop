@@ -1,12 +1,12 @@
-package com.alben.ministop.clients.services.impl.impl;
+package com.alben.ministop.clients.services.impl;
 
+import com.alben.ministop.clients.repositories.*;
+import com.alben.ministop.clients.services.*;
 import com.alben.ministop.exceptions.*;
-import com.alben.ministop.models.Client;
-import com.alben.ministop.clients.repositories.ClientRepository;
-import com.alben.ministop.clients.services.ClientService;
+import com.alben.ministop.models.*;
 import org.apache.commons.lang3.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 import org.springframework.util.StringUtils;
 
 import java.util.*;

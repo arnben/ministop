@@ -1,23 +1,21 @@
-package com.alben.ministop.controllers;
+package com.alben.ministop.chest;
 
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.alben.ministop.chest.services.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-
-import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy;
+import java.util.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/${ministop.api.rootPath}/v1/chest")
 public class ChestController {
+
+    @Autowired
+    private ChestService chestService;
 
     @GetMapping("/{realm}")
     public ResponseEntity<Map<String, Object>> getAllDuos(@RequestHeader("client") String clientName,

@@ -1,4 +1,4 @@
-package com.alben.ministop.clients.services.impl.impl;
+package com.alben.ministop.clients.services.impl;
 
 
 import com.alben.ministop.exceptions.ErrorDetails;
@@ -6,8 +6,7 @@ import com.alben.ministop.exceptions.MinistopAppException;
 import com.alben.ministop.exceptions.ValidationException;
 import com.alben.ministop.models.Client;
 import com.alben.ministop.clients.repositories.ClientRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,6 +30,7 @@ class DefaultClientServiceTest {
 
     @Test
     @DisplayName("Should return client instance when client name is valid and not yet taken.")
+    @Disabled
     public void happyPath() throws Exception {
         when(clientRepository.getClientByName(eq("user-profile"))).thenReturn(Optional.empty());
         Client client = defaultClientService.register(Client.builder().name("user-profile").emails(Arrays.asList("empoy.wurm@gmail.com")).build());
