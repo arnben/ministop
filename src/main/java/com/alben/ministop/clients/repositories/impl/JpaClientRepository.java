@@ -39,4 +39,13 @@ public class JpaClientRepository implements ClientRepository {
         return repository.getAllClientNames();
     }
 
+    @Override
+    public void deleteByName(String name) {
+        Optional<JpaClient> jpaClientOptional = repository.findJpaClientByName(name);
+        if(jpaClientOptional.isEmpty())
+            throw new RuntimeException("Client with name " + name + " does not exist.");
+
+        repository.delete(jpaClientOptional.get());
+    }
+
 }

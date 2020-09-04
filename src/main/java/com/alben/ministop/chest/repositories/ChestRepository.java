@@ -1,5 +1,7 @@
 package com.alben.ministop.chest.repositories;
 
+import com.alben.ministop.models.*;
+
 import java.util.*;
 
 public interface ChestRepository {

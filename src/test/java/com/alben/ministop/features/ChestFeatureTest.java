@@ -2,8 +2,7 @@ package com.alben.ministop.features;
 
 import com.alben.ministop.clients.repositories.*;
 import com.alben.ministop.models.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,18 +32,23 @@ public class ChestFeatureTest {
     @Autowired
     private ClientRepository clientRepository;
 
-    private void setUpClientAndData(String serviceName, String key, Map<String, Object> data) {
-        clientRepository.register(Client.builder().name(serviceName).key(key).emails(Collections.EMPTY_LIST).build());
+    @BeforeEach
+    public void setUp() {
+        clientRepository.register(Client.builder().name(CLIENT_NAME).key(TOKEN).emails(Collections.EMPTY_LIST).build());
+    }
+
+    @AfterEach
+    public void cleanUp() {
+       clientRepository.deleteByName(CLIENT_NAME);
     }
 
     @Test
     @DisplayName("Get All Properties For The Given Client Name and Realm ")
     public void getProperties() throws Exception {
-        setUpClientAndData(CLIENT_NAME, TOKEN, null);
         mockMvc.perform(
                 get(CHEST_BASE_URI + "/prod")
                         .header("Content-Type", "application/json")
-                        .header("client", "resource-service")
+                        .header("client", CLIENT_NAME)
                         .header("apiKey", TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.downStreamUrl").value("http://localhost:8080/"))

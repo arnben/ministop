@@ -1,6 +1,6 @@
 package com.alben.ministop.chest.services.impl;
 
-import com.alben.ministop.chest.repository.*;
+import com.alben.ministop.chest.repositories.*;
 import com.alben.ministop.chest.services.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
@@ -15,7 +15,12 @@ public class DefaultChestService implements ChestService {
 
     @Override
     public Map<String, Object> getAllProperties(String clientName, String realm) {
-        return null;
+        Map<String, Object> response = new TreeMap<>();
+        response.put("downStreamUrl", "http://localhost:8080/");
+        response.put("allowedUser", "10");
+        response.put("keywords",
+            Arrays.asList("tito", "vic", "joey"));
+        return response;
     }
 
     @Override

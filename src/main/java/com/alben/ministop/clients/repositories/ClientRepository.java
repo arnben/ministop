@@ -9,4 +9,5 @@ public interface ClientRepository {
     Optional<Client> getClientById(long id);
     Optional<Client> getClientByName(String name);
     Collection<String> getAllClientNames();
+    void deleteByName(String name);
 }

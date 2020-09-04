@@ -20,18 +20,12 @@ public class ChestController {
     @GetMapping("/{realm}")
     public ResponseEntity<Map<String, Object>> getAllDuos(@RequestHeader("client") String clientName,
                                                       @PathVariable String realm) {
-        Map<String, Object> response = new TreeMap<>();
-        response.put("downStreamUrl", "http://localhost:8080/");
-        response.put("allowedUser", "10");
-        response.put("keywords",
-                Arrays.asList("tito", "vic", "joey"));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(chestService.getAllProperties(clientName, realm));
     }
 
     @GetMapping("/{realm}/{propertyName}")
     public ResponseEntity<SinglePropertyResponse> getDuoByKey(@RequestHeader("client") String clientName,
                                                       @PathVariable String realm, @PathVariable String propertyName) {
-
         return ResponseEntity.ok(new SinglePropertyResponse("true"));
     }
 
